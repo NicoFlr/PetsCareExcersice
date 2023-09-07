@@ -1,23 +1,51 @@
 package com.services.dtoModels;
 
-import java.util.UUID;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class BreedDTO {
+public class BreedDTO implements Serializable {
+    private final String id;
+    private final String name;
+    private final String speciesId;
 
-    public UUID id;
-    public String name;
-    public UUID speciesId;
+    public BreedDTO(String id, String name, String speciesId) {
+        this.id = id;
+        this.name = name;
+        this.speciesId = speciesId;
+    }
 
-    public UUID getId() {return id;}
-    public void setId(UUID id) {this.id = id;}
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public String getSpeciesId() {
+        return speciesId;
     }
-    public UUID getSpeciesId() { return speciesId; }
-    public void setSpeciesId(UUID speciesId) {
-        this.speciesId = speciesId;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BreedDTO entity = (BreedDTO) o;
+        return Objects.equals(this.id, entity.id) &&
+                Objects.equals(this.name, entity.name) &&
+                Objects.equals(this.speciesId, entity.speciesId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, speciesId);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "speciesId = " + speciesId + ")";
     }
 }

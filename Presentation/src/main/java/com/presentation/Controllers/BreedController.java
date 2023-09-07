@@ -30,11 +30,24 @@ public class BreedController
                     content = @Content)
     })
     @GetMapping
-    public @ResponseBody BreedDTO getBreedById (@RequestParam UUID breedId)
+    public @ResponseBody BreedDTO getBreedById (@RequestParam String breedId)
     {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
-
         return _breedManager.Get(breedId);
+    }
+
+    @Operation(summary = "Creates a breed")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Breed created successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BreedDTO.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid id supplied",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Breed not found",
+                    content = @Content)
+    })
+    @PostMapping
+    public @ResponseBody BreedDTO createBreed (@RequestBody BreedDTO breedDTO)
+    {
+        return _breedManager.Create(breedDTO);
     }
 }

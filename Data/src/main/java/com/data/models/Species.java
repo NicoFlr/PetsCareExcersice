@@ -1,6 +1,7 @@
 package com.data.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -10,9 +11,11 @@ import java.util.Set;
 public class Species {
     @Id
     @Access(AccessType.PROPERTY)
+    @Size(max = 36)
     @Column(name = "id", nullable = false, length = 36)
     private String id;
 
+    @Size(max = 150)
     @Column(name = "name", length = 150)
     private String name;
 

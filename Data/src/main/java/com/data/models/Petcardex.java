@@ -1,22 +1,29 @@
 package com.data.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "petcardex")
+@Table(name = "pet_cardex")
 public class Petcardex {
     @Id
+    @Size(max = 36)
     @Column(name = "id", nullable = false, length = 36)
     private String id;
 
     @Column(name = "visit_date")
-    private Instant visitDate;
+    private LocalDate visitDate;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pet_id", nullable = false)
+    @JoinColumn(name = "pet_id", insertable = false, updatable = false)
     private com.data.models.Pet pet;
+
+    @Size(max = 36)
+    @Column(name = "pet_id", nullable = false, length = 36)
+    private String petId;
 
     @Lob
     @Column(name = "description")
@@ -34,12 +41,20 @@ public class Petcardex {
         this.id = id;
     }
 
-    public Instant getVisitDate() {
+    public LocalDate getVisitDate() {
         return visitDate;
     }
 
-    public void setVisitDate(Instant visitDate) {
+    public void setVisitDate(LocalDate visitDate) {
         this.visitDate = visitDate;
+    }
+
+    public String getPetId() {
+        return petId;
+    }
+
+    public void setPetId(String petId) {
+        this.petId = petId;
     }
 
     public com.data.models.Pet getPet() {

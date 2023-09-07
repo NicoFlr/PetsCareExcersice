@@ -3,9 +3,6 @@ package com.services.dtoModels;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * DTO for {@link com.data.models.Species}
- */
 public class SpeciesDTO implements Serializable {
     private final String name;
 

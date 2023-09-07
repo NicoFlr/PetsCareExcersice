@@ -8,9 +8,9 @@ import java.util.UUID;
 
 @Service
 public interface IBreedManager {
-    BreedDTO Get(UUID id);
+    BreedDTO Get(String id);
     BreedDTO Create(BreedDTO newBreed);
-    BreedDTO Update(BreedDTO breed, UUID id);
-    BreedDTO Delete(UUID id);
+    BreedDTO Update(BreedDTO breed, String id);
+    BreedDTO Delete(String id);
     List<BreedDTO> GetAll();
 }

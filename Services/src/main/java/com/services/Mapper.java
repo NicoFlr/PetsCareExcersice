@@ -1,9 +1,7 @@
 package com.services;
 
-import com.data.models.Breed;
-import com.data.models.Owner;
-import com.services.dtoModels.BreedDTO;
-import com.services.dtoModels.OwnerDTO;
+import com.data.models.*;
+import com.services.dtoModels.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -76,5 +74,116 @@ public class Mapper {
         owner.setPhoneNumber(ownerDTO.getPhoneNumber());
 
         return owner;
+    }
+
+    public static List<OwnerDTO> OwnerToDTOList(List<Owner> ownerList) {
+        List<OwnerDTO> ownerDTOList = new ArrayList<OwnerDTO>();
+
+        for (Owner owner : ownerList) {
+            OwnerDTO ownerDTOToInsert = OwnerToDto(owner);
+            ownerDTOList.add(ownerDTOToInsert);
+        }
+        return ownerDTOList;
+    }
+
+    public static PetDTO PetToDto(Pet pet) {
+        PetDTO petDTO = new PetDTO(
+                pet.getId(),
+                pet.getName(),
+                pet.getDateOfBirth(),
+                pet.getSpeciesId(),
+                pet.getBreedId(),
+                pet.getNotes(),
+                pet.getOwnerId()
+        );
+
+        return petDTO;
+    }
+
+    public static Pet DTOtoPet(PetDTO petDTO) {
+        Pet pet = new Pet();
+
+        pet.setId(String.valueOf(UUID.randomUUID()));
+        pet.setName(petDTO.getName());
+        pet.setDateOfBirth(petDTO.getDateOfBirth());
+        pet.setSpeciesId(petDTO.getSpeciesId());
+        pet.setBreedId(petDTO.getBreedId());
+        pet.setNotes(petDTO.getNotes());
+        pet.setOwnerId(petDTO.getOwnerId());
+
+        return pet;
+    }
+
+    public static List<PetDTO> PetToDTOList(List<Pet> petList) {
+        List<PetDTO> petDTOList = new ArrayList<PetDTO>();
+
+        for (Pet pet : petList) {
+            PetDTO petDTOToInsert = PetToDto(pet);
+            petDTOList.add(petDTOToInsert);
+        }
+        return petDTOList;
+    }
+
+    public static PetCardexDTO PetCardexToDto(PetCardex petCardex) {
+        PetCardexDTO petCardexDTO = new PetCardexDTO(
+                petCardex.getId(),
+                petCardex.getVisitDate(),
+                petCardex.getPetId(),
+                petCardex.getDescription(),
+                petCardex.getMedication()
+        );
+
+        return petCardexDTO;
+    }
+
+    public static PetCardex DTOtoPetCardex(PetCardexDTO petCardexDTO) {
+        PetCardex petCardex = new PetCardex();
+
+        petCardex.setId(String.valueOf(UUID.randomUUID()));
+        petCardex.setVisitDate(petCardexDTO.getVisitDate());
+        petCardex.setPetId(petCardexDTO.getPetId());
+        petCardex.setDescription(petCardexDTO.getDescription());
+        petCardex.setMedication(petCardexDTO.getMedication());
+
+
+        return petCardex;
+    }
+
+    public static List<PetCardexDTO> PetCardexToDTOList(List<PetCardex> petCardexList) {
+        List<PetCardexDTO> petCardexDTOList = new ArrayList<PetCardexDTO>();
+
+        for (PetCardex petCardex : petCardexList) {
+            PetCardexDTO petCardexDTOToInsert = PetCardexToDto(petCardex);
+            petCardexDTOList.add(petCardexDTOToInsert);
+        }
+        return petCardexDTOList;
+    }
+
+    public static SpeciesDTO SpeciesToDto(Species species) {
+        SpeciesDTO speciesDTO = new SpeciesDTO(
+                species.getId(),
+                species.getName()
+        );
+
+        return speciesDTO;
+    }
+
+    public static Species DTOtoSpecies(SpeciesDTO speciesDTO) {
+        Species species = new Species();
+
+        species.setId(String.valueOf(UUID.randomUUID()));
+        species.setName(speciesDTO.getName());
+
+        return species;
+    }
+
+    public static List<SpeciesDTO> SpeciesToDTOList(List<Species> speciesList) {
+        List<SpeciesDTO> speciesDTOList = new ArrayList<SpeciesDTO>();
+
+        for (Species species : speciesList) {
+            SpeciesDTO speciesDTOToInsert = SpeciesToDto(species);
+            speciesDTOList.add(speciesDTOToInsert);
+        }
+        return speciesDTOList;
     }
 }

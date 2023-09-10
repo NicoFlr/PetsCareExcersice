@@ -1,20 +1,24 @@
 package com.services.managers.breed;
 
-
-
 import com.data.exceptions.CustomException;
 import com.data.exceptions.ErrorResults;
 import com.data.models.Breed;
+import com.data.models.Species;
 import com.data.repositories.BreedRepository;
+import com.data.repositories.SpeciesRepository;
 import com.services.Mapper;
 import com.services.dtoModels.BreedDTO;
+import com.services.dtoModels.SpeciesDTO;
+import com.services.managers.petCardex.IPetCardexManager;
+import com.services.managers.species.ISpeciesManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//import org.hibernate.SessionFactory;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BreedManager implements IBreedManager{
@@ -22,12 +26,8 @@ public class BreedManager implements IBreedManager{
     @Autowired
     private BreedRepository breedRepository;
 
-    /*@Autowired
-    private SessionFactory sessionFactory;
-
-    public void setSessionFactory(SessionFactory sf){
-        this.sessionFactory = sf;
-    }*/
+    @Autowired
+    private ISpeciesManager _speciesManager;
 
     public BreedDTO Get(String id) {
         try
@@ -37,7 +37,7 @@ public class BreedManager implements IBreedManager{
             return breedDTO;
         }
         catch (Exception exception){
-            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Pet not found!");
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Breed not found!");
         }
     }
 
@@ -47,43 +47,84 @@ public class BreedManager implements IBreedManager{
         {
             Breed breed = Mapper.DTOtoBreed(newBreed);
             breedRepository.save(breed);
-            //this.sessionFactory.getCurrentSession().persist(breed);
 
             BreedDTO breedDTO = Mapper.BreedToDto(breed);
+            breedDTO.SetSpeciesName(newBreed.getNewSpeciesName());
+
             return breedDTO;
         }
         catch (Exception exception)
         {
-            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "XXX not found!");
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Breed not found!");
         }
     }
 
-    /*
-    private boolean OwnerIdExists(String clientId)
+    @Transactional
+    public BreedDTO Update(BreedDTO updatedBreed, String id)
     {
-        boolean answer = false;
-        Session session =  getSession().get(Source.class, id);
-        if()
+        try
         {
+            Optional<Breed> foundBreed = breedRepository.findById(id);
 
+
+            foundBreed.get().setName(updatedBreed.getName());
+            foundBreed.get().setSpeciesId(updatedBreed.getSpeciesId());
+
+            breedRepository.save(foundBreed.get());
+
+            BreedDTO breedDTO = Mapper.BreedToDto(foundBreed.get());
+            breedDTO.SetSpeciesName(updatedBreed.getNewSpeciesName());
+            return breedDTO;
         }
-
-        return answer
-    }*/
-
-
-    public BreedDTO Update(BreedDTO breed, String id)
-    {
-        return null;
+        catch (Exception exception)
+        {
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Breed not found!");
+        }
     }
 
-
+    @Transactional
     public BreedDTO Delete(String id) {
-        return null;
+        try
+        {
+            Breed foundBreed = breedRepository.getReferenceById(id);
+            breedRepository.deleteById(id);
+
+            BreedDTO breedDTO = Mapper.BreedToDto(foundBreed);
+            return breedDTO;
+        }
+        catch (Exception exception)
+        {
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Breed not found!");
+        }
     }
 
 
     public List<BreedDTO> GetAll() {
-        return null;
+
+        List<Breed> allBreeds =  breedRepository.findAll();
+
+        List<BreedDTO> allBreedsDTOs = Mapper.BreedToDTOList(allBreeds);
+        List<SpeciesDTO> speciesDTOList = _speciesManager.GetAll();
+        List<String> SpceiesIds = allBreedsDTOs.stream().map(BreedDTO::getSpeciesId).distinct().toList();
+
+        for (BreedDTO breed : allBreedsDTOs) {
+                SpeciesDTO species = speciesDTOList.stream().filter(s-> s.getId().equals(breed.getSpeciesId())).findFirst().get();
+                breed.SetSpeciesName(species.getName());
+        }
+
+        return allBreedsDTOs;
+    }
+
+    public List<BreedDTO> GetAllFromIdList(List<String> idList)
+    {
+        List<String> uniqueIdList = idList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<Breed> breedsFound = breedRepository.findAllById(uniqueIdList);
+
+        List<BreedDTO> breedDTOsFound = Mapper.BreedToDTOList(breedsFound);
+
+        return breedDTOsFound;
     }
 }

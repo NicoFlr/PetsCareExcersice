@@ -2,17 +2,22 @@ package com.services.dtoModels;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
-public class PetcardexDTO implements Serializable {
+public class PetCardexDTO implements Serializable {
     private final String id;
-    private final Instant visitDate;
+    private final LocalDate visitDate;
+    private final String petId;
     private final String description;
     private final String medication;
 
-    public PetcardexDTO(String id, Instant visitDate, String description, String medication) {
+
+
+    public PetCardexDTO(String id, LocalDate visitDate, String petId, String description, String medication) {
         this.id = id;
         this.visitDate = visitDate;
+        this.petId = petId;
         this.description = description;
         this.medication = medication;
     }
@@ -21,7 +26,7 @@ public class PetcardexDTO implements Serializable {
         return id;
     }
 
-    public Instant getVisitDate() {
+    public LocalDate getVisitDate() {
         return visitDate;
     }
 
@@ -33,11 +38,13 @@ public class PetcardexDTO implements Serializable {
         return medication;
     }
 
+    public String getPetId() {return petId;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PetcardexDTO entity = (PetcardexDTO) o;
+        PetCardexDTO entity = (PetCardexDTO) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.visitDate, entity.visitDate) &&
                 Objects.equals(this.description, entity.description) &&

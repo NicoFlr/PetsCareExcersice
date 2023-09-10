@@ -10,7 +10,8 @@ public interface IOwnerManager {
     OwnerDTO Get(String id);
     List<OwnerDTO> GetAll();
     OwnerDTO Create(OwnerDTO newOwner);
-    OwnerDTO Update(OwnerDTO owner, String id);
+    OwnerDTO Update(OwnerDTO updatedOwner, String id);
     OwnerDTO Delete(String id);
 
+    List<OwnerDTO> GetAllFromIdList(List<String> idList);
 }

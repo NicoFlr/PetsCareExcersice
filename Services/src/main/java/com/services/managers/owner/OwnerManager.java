@@ -3,8 +3,12 @@ package com.services.managers.owner;
 import com.data.exceptions.CustomException;
 import com.data.exceptions.ErrorResults;
 import com.data.models.Owner;
+import com.data.models.Owner;
+import com.data.models.Owner;
 import com.data.repositories.OwnerRepository;
 import com.services.Mapper;
+import com.services.dtoModels.OwnerDTO;
+import com.services.dtoModels.OwnerDTO;
 import com.services.dtoModels.OwnerDTO;
 
 import jakarta.transaction.Transactional;
@@ -16,12 +20,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-//import static jdk.nio.zipfs.ZipFileAttributeView.AttrID.owner;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OwnerManager implements IOwnerManager {
@@ -47,12 +47,6 @@ public class OwnerManager implements IOwnerManager {
         catch (Exception exception){
             throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Owner not found!");
         }
-    }
-
-    public List<OwnerDTO> GetAll() {
-        List<OwnerDTO> ownerDTOList = new ArrayList<OwnerDTO>();
-
-        return null;
     }
 
     @Transactional
@@ -85,9 +79,11 @@ public class OwnerManager implements IOwnerManager {
     private boolean OwnerIdExists(String owner_id)
     {
         boolean answer = false;
-        List<Owner> ownersFound = new ArrayList<Owner>();//ownerRepository.findOwnersByOwnerId(owner_id);
-        //Session session =  getSession().get(Source.class, id);
-        if(ownersFound.isEmpty())
+        List<String> x = new ArrayList<String>();
+        x.add(owner_id);
+        List<Owner> ownersFound = ownerRepository.findAllById(x);
+
+        if(ownersFound.size() > 1)
         {
             answer = true;
         }
@@ -96,14 +92,58 @@ public class OwnerManager implements IOwnerManager {
     }
 
 
-    public OwnerDTO Update(OwnerDTO owner, String id)
+    public OwnerDTO Update(OwnerDTO updatedOwner, String id)
     {
-        return null;
+        try
+        {
+            Owner ownerToUpdate = Mapper.DTOtoOwner(updatedOwner);
+            ownerRepository.save(ownerToUpdate);
+
+            OwnerDTO ownerDTO = Mapper.OwnerToDto(ownerToUpdate);
+            return ownerDTO;
+        }
+        catch (Exception exception)
+        {
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Owner not found!");
+        }
     }
 
-
+    @Transactional
     public OwnerDTO Delete(String id) {
-        return null;
+        try
+        {
+            Owner foundOwner = ownerRepository.getReferenceById(id);
+            ownerRepository.deleteById(id);
+
+            OwnerDTO ownerDTO = Mapper.OwnerToDto(foundOwner);
+            return ownerDTO;
+        }
+        catch (Exception exception)
+        {
+            throw new CustomException(ErrorResults.ENTITY_NOT_FOUND, "Owner not found!");
+        }
     }
 
+    public List<OwnerDTO> GetAll() {
+
+        List<OwnerDTO> allOwnersDTOs = new ArrayList<OwnerDTO>();
+        List<Owner> allOwners =  ownerRepository.findAll();
+
+        allOwnersDTOs = Mapper.OwnerToDTOList(allOwners);
+
+        return allOwnersDTOs;
+    }
+
+    public List<OwnerDTO> GetAllFromIdList(List<String> idList)
+    {
+        List<String> uniqueIdList = idList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<Owner> ownersFound = ownerRepository.findAllById(uniqueIdList);
+
+        List<OwnerDTO> ownerDTOsFound = Mapper.OwnerToDTOList(ownersFound);
+
+        return ownerDTOsFound;
+    }
 }

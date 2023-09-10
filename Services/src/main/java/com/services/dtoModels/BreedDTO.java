@@ -7,8 +7,10 @@ public class BreedDTO implements Serializable {
     private final String id;
     private final String name;
     private final String speciesId;
+    private String speciesName;
+    private String newSpeciesName;
 
-    public BreedDTO(String id, String name, String speciesId) {
+    public BreedDTO(String id, String name, String speciesId){
         this.id = id;
         this.name = name;
         this.speciesId = speciesId;
@@ -25,6 +27,11 @@ public class BreedDTO implements Serializable {
     public String getSpeciesId() {
         return speciesId;
     }
+    public String getSpeciesName() { return speciesName; }
+    public void SetSpeciesName(String speciesName) {this.speciesName = speciesName;}
+
+    public String getNewSpeciesName() { return newSpeciesName; }
+    public void SetNewSpeciesName(String newSpeciesName) {this.newSpeciesName = newSpeciesName;}
 
     @Override
     public boolean equals(Object o) {
@@ -46,6 +53,7 @@ public class BreedDTO implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "name = " + name + ", " +
-                "speciesId = " + speciesId + ")";
+                "speciesId = " + speciesId +
+                "speciesName = " + speciesName + ")";
     }
 }

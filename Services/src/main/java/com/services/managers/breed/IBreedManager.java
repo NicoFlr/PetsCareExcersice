@@ -4,7 +4,6 @@ import com.services.dtoModels.BreedDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public interface IBreedManager {
@@ -13,4 +12,5 @@ public interface IBreedManager {
     BreedDTO Update(BreedDTO breed, String id);
     BreedDTO Delete(String id);
     List<BreedDTO> GetAll();
+    List<BreedDTO> GetAllFromIdList(List<String> idList);
 }

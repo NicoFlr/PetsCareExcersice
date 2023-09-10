@@ -3,12 +3,11 @@ package com.data.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "pet_cardex")
-public class Petcardex {
+public class PetCardex {
     @Id
     @Size(max = 36)
     @Column(name = "id", nullable = false, length = 36)

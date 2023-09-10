@@ -62,6 +62,6 @@ public class Pet {
     private String ownerId;
 
     @OneToMany(mappedBy = "pet")
-    private Set<Petcardex> petCardexes = new LinkedHashSet<>();
+    private Set<PetCardex> petCardexes = new LinkedHashSet<>();
 
 }

@@ -2,19 +2,23 @@ package com.services.managers.pet;
 
 import com.data.exceptions.CustomException;
 import com.data.exceptions.ErrorResults;
+import com.data.models.Owner;
 import com.data.models.Pet;
 import com.data.repositories.PetRepository;
 import com.services.Mapper;
-import com.services.dtoModels.PetCardexDTO;
-import com.services.dtoModels.PetDTO;
+import com.services.dtoModels.*;
+import com.services.managers.breed.IBreedManager;
+import com.services.managers.owner.IOwnerManager;
 import com.services.managers.petCardex.IPetCardexManager;
 import com.services.managers.petCardex.PetCardexManager;
+import com.services.managers.species.ISpeciesManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PetManager implements IPetManager {
@@ -22,6 +26,10 @@ public class PetManager implements IPetManager {
     private PetRepository petRepository;
     @Autowired
     private IPetCardexManager _petCardexManager;
+    @Autowired
+    private IBreedManager _breedManager;
+    @Autowired
+    private IOwnerManager _ownerManager;
     public PetDTO Get(String id) {
         try
         {
@@ -42,6 +50,9 @@ public class PetManager implements IPetManager {
             petRepository.save(pet);
 
             PetDTO petDTO = Mapper.PetToDto(pet);
+            petDTO.setSpeciesName(newPet.getNewSpeciesName());
+            petDTO.setBreedName(newPet.getNewBreedName());
+            petDTO.setOwnerName(newPet.getNewOwnerName());
             return petDTO;
         }
         catch (Exception exception)
@@ -54,10 +65,24 @@ public class PetManager implements IPetManager {
     {
         try
         {
-            Pet petToUpdate = Mapper.DTOtoPet(updatedPet);
-            petRepository.save(petToUpdate);
+            Optional<Pet> foundPet = petRepository.findById(id);
 
-            PetDTO petDTO = Mapper.PetToDto(petToUpdate);
+            foundPet.get().setName(updatedPet.getName());
+            foundPet.get().setDateOfBirth(updatedPet.getDateOfBirth());
+            foundPet.get().setSpeciesId(updatedPet.getSpeciesId());
+            foundPet.get().setBreedId(updatedPet.getBreedId());
+            foundPet.get().setOwnerId(updatedPet.getOwnerId());
+            foundPet.get().setNotes(updatedPet.getNotes());
+
+            petRepository.save(foundPet.get());
+
+            PetDTO petDTO = Mapper.PetToDto(foundPet.get());
+
+            petDTO.setSpeciesName(updatedPet.getNewSpeciesName());
+            petDTO.setBreedName(updatedPet.getNewBreedName());
+            petDTO.setOwnerName(updatedPet.getNewOwnerName());
+
+            //petDTO.SetSpeciesName(updatedPet.getNewSpeciesName());
             return petDTO;
         }
         catch (Exception exception)
@@ -84,10 +109,21 @@ public class PetManager implements IPetManager {
 
     public List<PetDTO> GetAll() {
 
-        List<PetDTO> allPetsDTOs = new ArrayList<PetDTO>();
         List<Pet> allPets =  petRepository.findAll();
+        List<PetDTO> allPetsDTOs = Mapper.PetToDTOList(allPets);
 
-        allPetsDTOs = Mapper.PetToDTOList(allPets);
+        List<BreedDTO> breedDTOList = _breedManager.GetAll();
+        List<OwnerDTO> ownerDTOList = _ownerManager.GetAll();
+
+
+        for (PetDTO pet : allPetsDTOs) {
+            BreedDTO breed = breedDTOList.stream().filter(s-> s.getId().equals(pet.getBreedId())).findFirst().get();
+            OwnerDTO owner = ownerDTOList.stream().filter(s-> s.getId().equals(pet.getOwnerId())).findFirst().get();
+
+            pet.setBreedName(breed.getName());
+            pet.setSpeciesName(breed.getSpeciesName());
+            pet.setOwnerName(owner.getFullName());
+        }
 
         return allPetsDTOs;
     }

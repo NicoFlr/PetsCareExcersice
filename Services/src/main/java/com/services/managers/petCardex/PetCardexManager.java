@@ -3,6 +3,7 @@ package com.services.managers.petCardex;
 import com.data.exceptions.CustomException;
 import com.data.exceptions.ErrorResults;
 import com.data.models.PetCardex;
+import com.data.models.Species;
 import com.data.repositories.PetCardexRepository;
 import com.services.Mapper;
 import com.services.dtoModels.PetCardexDTO;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PetCardexManager implements IPetCardexManager {
@@ -51,10 +53,15 @@ public class PetCardexManager implements IPetCardexManager {
     {
         try
         {
-            PetCardex petCardexToUpdate = Mapper.DTOtoPetCardex(updatedPetCardex);
-            petCardexRepository.save(petCardexToUpdate);
+            Optional<PetCardex> foundPetCardex = petCardexRepository.findById(id);
 
-            PetCardexDTO petCardexDTO = Mapper.PetCardexToDto(petCardexToUpdate);
+            foundPetCardex.get().setVisitDate(updatedPetCardex.getVisitDate());
+            foundPetCardex.get().setDescription(updatedPetCardex.getDescription());
+            foundPetCardex.get().setMedication(updatedPetCardex.getMedication());
+
+            petCardexRepository.save(foundPetCardex.get());
+
+            PetCardexDTO petCardexDTO = Mapper.PetCardexToDto(foundPetCardex.get());
             return petCardexDTO;
         }
         catch (Exception exception)
@@ -81,10 +88,9 @@ public class PetCardexManager implements IPetCardexManager {
 
     public List<PetCardexDTO> GetAll() {
 
-        List<PetCardexDTO> allPetCardexsDTOs;
         List<PetCardex> allPetCardexs =  petCardexRepository.findAll();
 
-        allPetCardexsDTOs = Mapper.PetCardexToDTOList(allPetCardexs);
+        List<PetCardexDTO> allPetCardexsDTOs = Mapper.PetCardexToDTOList(allPetCardexs);
 
         return allPetCardexsDTOs;
     }

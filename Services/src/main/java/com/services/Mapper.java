@@ -46,14 +46,14 @@ public class Mapper {
         OwnerDTO ownerDTO = new OwnerDTO(
                 owner.getId(),
                 owner.getOwnerId(),
+                owner.getPhoneNumber(),
+                owner.getCountryCode(),
+                owner.getBirthDate(),
                 owner.getAddressLine1(),
                 owner.getAddressLine2(),
-                owner.getBirthDate(),
-                owner.getCountryCode(),
                 owner.getFirstName(),
                 owner.getLastName(),
-                owner.getFullName(),
-                owner.getPhoneNumber()
+                owner.getFullName()
         );
 
         return ownerDTO;

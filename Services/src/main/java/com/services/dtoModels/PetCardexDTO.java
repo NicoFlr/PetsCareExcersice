@@ -13,7 +13,6 @@ public class PetCardexDTO implements Serializable {
     private final String medication;
 
 
-
     public PetCardexDTO(String id, LocalDate visitDate, String petId, String description, String medication) {
         this.id = id;
         this.visitDate = visitDate;

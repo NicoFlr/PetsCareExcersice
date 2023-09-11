@@ -2,11 +2,13 @@ package com.services.managers.owner;
 
 import com.data.exceptions.CustomException;
 import com.data.exceptions.ErrorResults;
+import com.data.models.Breed;
 import com.data.models.Owner;
 import com.data.models.Owner;
 import com.data.models.Owner;
 import com.data.repositories.OwnerRepository;
 import com.services.Mapper;
+import com.services.dtoModels.BreedDTO;
 import com.services.dtoModels.OwnerDTO;
 import com.services.dtoModels.OwnerDTO;
 import com.services.dtoModels.OwnerDTO;
@@ -59,7 +61,7 @@ public class OwnerManager implements IOwnerManager {
             boolean ownerIdAlreadyExists = OwnerIdExists(newOwner.getOwnerId());
             if(!ownerIdAlreadyExists)
             {
-                this.sessionFactory.getCurrentSession().persist(owner);
+                ownerRepository.save(owner);
 
                 OwnerDTO ownerDTO = Mapper.OwnerToDto(owner);
                 return ownerDTO;
@@ -91,15 +93,26 @@ public class OwnerManager implements IOwnerManager {
         return answer;
     }
 
-
+    @Transactional
     public OwnerDTO Update(OwnerDTO updatedOwner, String id)
     {
         try
         {
-            Owner ownerToUpdate = Mapper.DTOtoOwner(updatedOwner);
-            ownerRepository.save(ownerToUpdate);
+            Optional<Owner> foundOwner = ownerRepository.findById(id);
 
-            OwnerDTO ownerDTO = Mapper.OwnerToDto(ownerToUpdate);
+            foundOwner.get().setOwnerId(updatedOwner.getOwnerId());
+            foundOwner.get().setFirstName(updatedOwner.getFirstName());
+            foundOwner.get().setLastName(updatedOwner.getLastName());
+            foundOwner.get().setCountryCode(updatedOwner.getCountryCode());
+            foundOwner.get().setPhoneNumber(updatedOwner.getPhoneNumber());
+            foundOwner.get().setAddressLine1(updatedOwner.getAddressLine1());
+            foundOwner.get().setAddressLine2(updatedOwner.getAddressLine2());
+            foundOwner.get().setBirthDate(updatedOwner.getBirthDate());
+
+            ownerRepository.save(foundOwner.get());
+
+            OwnerDTO ownerDTO = Mapper.OwnerToDto(foundOwner.get());
+            //ownerDTO.SetSpeciesName(updatedOwner.getNewSpeciesName());
             return ownerDTO;
         }
         catch (Exception exception)
@@ -126,10 +139,9 @@ public class OwnerManager implements IOwnerManager {
 
     public List<OwnerDTO> GetAll() {
 
-        List<OwnerDTO> allOwnersDTOs = new ArrayList<OwnerDTO>();
         List<Owner> allOwners =  ownerRepository.findAll();
 
-        allOwnersDTOs = Mapper.OwnerToDTOList(allOwners);
+        List<OwnerDTO> allOwnersDTOs = Mapper.OwnerToDTOList(allOwners);
 
         return allOwnersDTOs;
     }

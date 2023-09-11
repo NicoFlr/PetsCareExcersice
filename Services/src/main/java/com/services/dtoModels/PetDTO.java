@@ -13,6 +13,14 @@ public class PetDTO implements Serializable {
     private final String notes;
     private final String ownerId;
 
+    private String speciesName;
+    private String breedName;
+    private String ownerName;
+
+    private String newSpeciesName;
+    private String newBreedName;
+    private String newOwnerName;
+
     public PetDTO(String id, String name, LocalDate dateOfBirth, String speciesId, String breedId, String notes, String ownerId) {
         this.id = id;
         this.name = name;
@@ -49,6 +57,54 @@ public class PetDTO implements Serializable {
 
     public String getOwnerId() {
         return ownerId;
+    }
+
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
+    public void setSpeciesName(String speciesName) {
+        this.speciesName = speciesName;
+    }
+
+    public String getBreedName() {
+        return breedName;
+    }
+
+    public void setBreedName(String breedName) {
+        this.breedName = breedName;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getNewSpeciesName() {
+        return newSpeciesName;
+    }
+
+    public void setNewSpeciesName(String newSpeciesName) {
+        this.newSpeciesName = newSpeciesName;
+    }
+
+    public String getNewBreedName() {
+        return newBreedName;
+    }
+
+    public void setNewBreedName(String newBreedName) {
+        this.newBreedName = newBreedName;
+    }
+
+    public String getNewOwnerName() {
+        return newOwnerName;
+    }
+
+    public void setNewOwnerName(String newOwnerName) {
+        this.newOwnerName = newOwnerName;
     }
 
     @Override

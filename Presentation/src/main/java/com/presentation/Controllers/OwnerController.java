@@ -76,10 +76,10 @@ public class OwnerController {
             @ApiResponse(responseCode = "404", description = "Owner not found",
                     content = @Content)
     })
-    @PutMapping
-    public OwnerDTO updateOwner (@RequestBody OwnerDTO ownerDTO, @RequestParam String ownerId)
+    @PutMapping("/{id}")
+    public OwnerDTO updateOwner (@RequestBody OwnerDTO ownerDTO, @PathVariable String id)
     {
-        return _ownerManager.Update(ownerDTO, ownerId);
+        return _ownerManager.Update(ownerDTO, id);
     }
 
     @Operation(summary = "Deletes an owner")

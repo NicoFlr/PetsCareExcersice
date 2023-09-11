@@ -105,11 +105,12 @@ public class BreedManager implements IBreedManager{
 
         List<BreedDTO> allBreedsDTOs = Mapper.BreedToDTOList(allBreeds);
         List<SpeciesDTO> speciesDTOList = _speciesManager.GetAll();
-        List<String> SpceiesIds = allBreedsDTOs.stream().map(BreedDTO::getSpeciesId).distinct().toList();
+        //List<String> SpceiesIds = allBreedsDTOs.stream().map(BreedDTO::getSpeciesId).distinct().toList();
 
         for (BreedDTO breed : allBreedsDTOs) {
                 SpeciesDTO species = speciesDTOList.stream().filter(s-> s.getId().equals(breed.getSpeciesId())).findFirst().get();
-                breed.SetSpeciesName(species.getName());
+
+            breed.SetSpeciesName(species.getName());
         }
 
         return allBreedsDTOs;

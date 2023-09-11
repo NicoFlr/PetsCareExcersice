@@ -93,10 +93,10 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet not found",
                     content = @Content)
     })
-    @PutMapping
-    public PetDTO updatePet (@RequestBody PetDTO petDTO, @RequestParam String petId)
+    @PutMapping("/{id}")
+    public PetDTO updatePet (@RequestBody PetDTO petDTO, @PathVariable String id)
     {
-        return _petManager.Update(petDTO, petId);
+        return _petManager.Update(petDTO, id);
     }
 
     @Operation(summary = "Deletes a pet")
@@ -107,9 +107,9 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet not found",
                     content = @Content)
     })
-    @DeleteMapping
-    public PetDTO deletePet (@RequestParam String petId)
+    @DeleteMapping("/{id}")
+    public PetDTO deletePet (@PathVariable String id)
     {
-        return _petManager.Delete(petId);
+        return _petManager.Delete(id);
     }
 }

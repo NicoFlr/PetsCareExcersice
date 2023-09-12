@@ -88,11 +88,11 @@ public class SpeciesManager implements ISpeciesManager{
 
     public List<SpeciesDTO> GetAll() {
 
-        List<SpeciesDTO> allSpeciessDTOs = new ArrayList<SpeciesDTO>();
-        List<Species> allSpeciess =  speciesRepository.findAll();
+        List<SpeciesDTO> allSpeciesDTOs;
+        List<Species> allSpecies =  speciesRepository.findAll();
 
-        allSpeciessDTOs = Mapper.SpeciesToDTOList(allSpeciess);
+        allSpeciesDTOs = Mapper.SpeciesToDTOList(allSpecies);
 
-        return allSpeciessDTOs;
+        return allSpeciesDTOs;
     }
 }

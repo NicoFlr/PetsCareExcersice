@@ -76,10 +76,10 @@ public class PetCardexController {
             @ApiResponse(responseCode = "404", description = "PetCardex not found",
                     content = @Content)
     })
-    @PutMapping
-    public PetCardexDTO updatePetCardex (@RequestBody PetCardexDTO petCardexDTO, @RequestParam String petCardexId)
+    @PutMapping("/{id}")
+    public PetCardexDTO updatePetCardex (@RequestBody PetCardexDTO petCardexDTO, @PathVariable String id)
     {
-        return _petCardexManager.Update(petCardexDTO, petCardexId);
+        return _petCardexManager.Update(petCardexDTO, id);
     }
 
     @Operation(summary = "Deletes a petCardex")
@@ -90,9 +90,9 @@ public class PetCardexController {
             @ApiResponse(responseCode = "404", description = "PetCardex not found",
                     content = @Content)
     })
-    @DeleteMapping
-    public PetCardexDTO deletePetCardex (@RequestParam String petCardexId)
+    @DeleteMapping("/{id}")
+    public PetCardexDTO deletePetCardex (@PathVariable String id)
     {
-        return _petCardexManager.Delete(petCardexId);
+        return _petCardexManager.Delete(id);
     }
 }

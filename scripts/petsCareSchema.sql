@@ -112,7 +112,7 @@ CREATE INDEX `FK_Pet_Species` ON `petscare`.`pet` (`species_id` ASC) VISIBLE;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `petscare`.`pet_cardex` (
   `id` CHAR(36) NOT NULL,
-  `visit_date` DATETIME NULL DEFAULT NULL,
+  `visit_date` DATE NULL DEFAULT NULL,
   `pet_id` CHAR(36) NOT NULL,
   `description` TEXT NULL DEFAULT NULL,
   `medication` TEXT NULL DEFAULT NULL,
